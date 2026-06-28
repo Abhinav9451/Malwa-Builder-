@@ -1,0 +1,33 @@
+<svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Malwa Builders">
+  <defs>
+    <linearGradient id="mbGold" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f6e3a8"/>
+      <stop offset="0.45" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#9c7a22"/>
+    </linearGradient>
+    <linearGradient id="mbGoldText" x1="72" y1="0" x2="72" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4e6b8"/>
+      <stop offset="1" stop-color="#caa233"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Emblem: diamond crest with M+B house silhouette -->
+  <g transform="translate(4 4)">
+    <!-- outer crest -->
+    <path d="M28 0 L56 16 V40 L28 56 L0 40 V16 Z" fill="#101216" stroke="url(#mbGold)" stroke-width="2"/>
+    <!-- inner thin frame -->
+    <path d="M28 6 L51 19 V37 L28 50 L5 37 V19 Z" fill="none" stroke="url(#mbGold)" stroke-width="0.9" opacity="0.6"/>
+    <!-- roof / mountain (Malwa) -->
+    <path d="M11 33 L22 19 L28 27 L34 19 L45 33 Z" fill="url(#mbGold)"/>
+    <!-- building pillars forming 'M' base -->
+    <rect x="14" y="33" width="4" height="11" fill="url(#mbGold)"/>
+    <rect x="26" y="33" width="4" height="11" fill="url(#mbGold)"/>
+    <rect x="38" y="33" width="4" height="11" fill="url(#mbGold)"/>
+    <!-- door -->
+    <path d="M25 44 v-6 a3 3 0 0 1 6 0 v6 Z" fill="#101216"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="74" y="30" font-family="'Playfair Display', Georgia, serif" font-size="22" font-weight="700" letter-spacing="1.5" fill="url(#mbGoldText)">MALWA</text>
+  <text x="74" y="50" font-family="'Inter', Arial, sans-serif" font-size="12.5" font-weight="500" letter-spacing="6.2" fill="#e9e3d3">BUILDERS</text>
+</svg>
