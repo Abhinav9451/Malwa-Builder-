@@ -43,28 +43,16 @@ Open `js/config.js` and replace the placeholders:
 The **WhatsApp button**, **contact form**, and all links update automatically
 from this file.
 
-## 🎬 Reels — hover to play (real content already added)
+## 🎬 Reels — click to open on Facebook (real content already added)
 
 The **Completed Projects & Reels** section uses the real Malwa Builders reel
 posters (downloaded from the Facebook page) in `assets/reels/`. Each card:
 
 - shows the real reel thumbnail,
-- **plays a video on hover and pauses when you move away**,
-- opens the actual reel on Facebook when clicked.
+- **opens the actual reel on the Malwa Builders Facebook page** (new tab) when clicked.
 
-By default, hovering plays a shared lightweight preview clip
-(`assets/video/preview.mp4`) so the effect works instantly. To make a card play
-**its own** reel video on hover:
-
-1. Download the reel (you own it) as an `.mp4` — e.g. from your phone, or any
-   reel/Facebook video downloader.
-2. Save it into `assets/reels/` (e.g. `reel1.mp4`).
-3. In `js/main.js`, find the `REELS` array and set that item's
-   `video: "assets/reels/reel1.mp4"`.
-
-> Reel **videos** can't be auto-downloaded from Facebook/Instagram (they're
-> streamed/protected), which is why the posters + links are used. Dropping in the
-> mp4 files is a 30-second step and the hover-play upgrades automatically.
+To edit, add or reorder reels, open the `REELS` array in `js/main.js` and change
+the `poster`, `link`, and `title` of each item.
 
 ## 🖼️ Add more project photos
 

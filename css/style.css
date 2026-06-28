@@ -7,10 +7,10 @@
   --bg-3: #161a22;
   --ink: #f3efe6;
   --muted: #a7a395;
-  --gold: #d4af37;
-  --gold-soft: #e7cd77;
-  --gold-grad: linear-gradient(135deg, #f6e3a8 0%, #d4af37 45%, #9c7a22 100%);
-  --line: rgba(212, 175, 55, 0.18);
+  --gold: #b9a06e;
+  --gold-soft: #cdb98c;
+  --gold-grad: linear-gradient(135deg, #d8c6a0 0%, #b9a06e 50%, #8a7245 100%);
+  --line: rgba(185, 160, 110, 0.18);
   --radius: 16px;
   --serif: "Playfair Display", Georgia, serif;
   --sans: "Inter", system-ui, sans-serif;
@@ -67,9 +67,9 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
 }
 .btn-gold {
   background: var(--gold-grad); color: #14110a;
-  box-shadow: 0 10px 30px rgba(212,175,55,.25);
+  box-shadow: 0 10px 30px rgba(185,160,110,.22);
 }
-.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(212,175,55,.4); }
+.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(185,160,110,.34); }
 .btn-ghost {
   border-color: var(--line); color: var(--ink);
   background: rgba(255,255,255,0.02); backdrop-filter: blur(6px);
@@ -132,7 +132,7 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
 .hero-overlay {
   position: absolute; inset: 0; z-index: 1;
   background:
-    radial-gradient(1200px 600px at 75% 30%, rgba(212,175,55,.10), transparent 60%),
+    radial-gradient(1200px 600px at 75% 30%, rgba(185,160,110,.08), transparent 60%),
     linear-gradient(180deg, rgba(12,14,18,.55) 0%, rgba(12,14,18,.78) 60%, var(--bg) 100%);
 }
 .hero-content { position: relative; z-index: 2; padding-top: 90px; max-width: 780px; }
@@ -209,22 +209,20 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
 
 /* ===== Reels (hover to play) ===== */
 .reels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.reel { cursor: pointer; }
+.reel { cursor: pointer; display: block; color: inherit; }
 .reel-media {
   position: relative; border-radius: var(--radius); overflow: hidden;
-  aspect-ratio: 9 / 16; background: var(--bg-3);
+  aspect-ratio: 4 / 5; background: var(--bg-3);
   border: 1px solid rgba(255,255,255,.06);
   box-shadow: 0 16px 40px rgba(0,0,0,.4);
   transition: transform .4s cubic-bezier(.2,.8,.2,1), border-color .4s, box-shadow .4s;
 }
 .reel:hover .reel-media { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 26px 60px rgba(0,0,0,.55); }
-.reel-poster, .reel-video {
+.reel-poster {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  z-index: 1; transition: transform .8s ease;
 }
-.reel-poster { z-index: 1; transition: transform 6s ease, opacity .5s ease; }
-.reel:hover .reel-poster { transform: scale(1.12); }
-.reel-video { z-index: 2; opacity: 0; transition: opacity .45s ease; }
-.reel.playing .reel-video { opacity: 1; }
+.reel:hover .reel-poster { transform: scale(1.08); }
 .reel-media::after {
   content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background: linear-gradient(transparent 55%, rgba(0,0,0,.7));
@@ -232,19 +230,12 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
 .reel-play {
   position: absolute; z-index: 4; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
-  background: rgba(212,175,55,.92); color: #14110a;
-  box-shadow: 0 8px 24px rgba(0,0,0,.5); transition: opacity .35s, transform .35s;
+  background: rgba(185,160,110,.92); color: #14110a;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5); transition: transform .35s, background .35s;
 }
-.reel.playing .reel-play { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-.reel-badge {
-  position: absolute; z-index: 4; top: 12px; left: 12px;
-  background: rgba(12,14,18,.8); backdrop-filter: blur(6px);
-  color: var(--gold); font-size: .68rem; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 5px 10px; border-radius: 50px; border: 1px solid var(--line);
-}
+.reel:hover .reel-play { transform: translate(-50%, -50%) scale(1.12); background: var(--gold); }
 .reel-cap { padding: 14px 4px 0; }
 .reel-cap strong { font-family: var(--serif); font-size: 1.05rem; display: block; }
-.reel-cap span { font-size: .78rem; color: var(--gold); }
 
 .footer-social-pill {
   display: inline-block; margin-top: 16px; padding: 8px 16px; border-radius: 50px;

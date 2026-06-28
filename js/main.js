@@ -135,63 +135,31 @@
   }
 
   /* ---------- Reels gallery (REAL Malwa Builders content) ----------
-     Each card shows the real reel poster and plays a video on HOVER,
-     pausing when the pointer leaves. Click opens the actual reel on Facebook.
-
-     To show a card's OWN reel video on hover (instead of the shared preview):
-       1) Download the reel (you own it) as an .mp4
-       2) Save it as assets/reels/reel1.mp4 (matching the poster name)
-       3) Set `video` below to "assets/reels/reel1.mp4"
+     Each card shows the real reel poster. Clicking opens the actual
+     reel on the Malwa Builders Facebook page in a new tab.
   ------------------------------------------------------------------- */
-  const PREVIEW_VIDEO = "assets/video/preview.mp4"; // shared fallback motion clip
   const REELS = [
-    { poster: "assets/reels/reel1.jpg", link: "https://www.facebook.com/reel/763708350134179/",   title: "Luxury House Walkthrough", tag: "Reel", video: "" },
-    { poster: "assets/reels/reel2.jpg", link: "https://www.facebook.com/reel/1317885930416828/",  title: "Modern Elevation",         tag: "Reel", video: "" },
-    { poster: "assets/reels/reel3.jpg", link: "https://www.facebook.com/reel/1653998529165761/",  title: "Interior Detailing",       tag: "Reel", video: "" },
-    { poster: "assets/reels/reel4.jpg", link: "https://www.facebook.com/reel/2398507333976287/",  title: "Bungalow Tour",            tag: "Reel", video: "" },
-    { poster: "assets/reels/reel7.jpg", link: "https://www.facebook.com/reel/4242328356019293/",  title: "Design Showcase",          tag: "Reel", video: "" },
-    { poster: "assets/reels/reel9.jpg", link: "https://www.facebook.com/reel/945812608231055/",   title: "On-Site Build",            tag: "Reel", video: "" },
+    { poster: "assets/reels/reel1.jpg", link: "https://www.facebook.com/reel/763708350134179/",   title: "Luxury House Walkthrough", tag: "Reel" },
+    { poster: "assets/reels/reel2.jpg", link: "https://www.facebook.com/reel/1317885930416828/",  title: "Modern Elevation",         tag: "Reel" },
+    { poster: "assets/reels/reel3.jpg", link: "https://www.facebook.com/reel/1653998529165761/",  title: "Interior Detailing",       tag: "Reel" },
+    { poster: "assets/reels/reel4.jpg", link: "https://www.facebook.com/reel/2398507333976287/",  title: "Bungalow Tour",            tag: "Reel" },
+    { poster: "assets/reels/reel7.jpg", link: "https://www.facebook.com/reel/4242328356019293/",  title: "Design Showcase",          tag: "Reel" },
+    { poster: "assets/reels/reel9.jpg", link: "https://www.facebook.com/reel/945812608231055/",   title: "On-Site Build",            tag: "Reel" },
   ];
 
   function gallery() {
     const wrap = $("#reels");
     if (!wrap) return;
-    wrap.innerHTML = REELS.map((r, i) => `
-      <article class="reel reveal" data-link="${r.link}">
+    wrap.innerHTML = REELS.map((r) => `
+      <a class="reel reveal" href="${r.link}" target="_blank" rel="noopener" aria-label="${r.title} — watch on Facebook">
         <div class="reel-media">
           <img class="reel-poster" src="${r.poster}" alt="${r.title}" loading="lazy" />
-          <video class="reel-video" muted loop playsinline preload="none"
-                 poster="${r.poster}" data-src="${r.video || PREVIEW_VIDEO}"></video>
           <span class="reel-play" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           </span>
-          <span class="reel-badge">${r.tag}</span>
         </div>
-        <div class="reel-cap"><strong>${r.title}</strong><span>Watch on Facebook</span></div>
-      </article>`).join("");
-
-    $$(".reel", wrap).forEach((card) => {
-      const video = $(".reel-video", card);
-      let loaded = false;
-      const play = () => {
-        if (!loaded) { video.src = video.dataset.src; loaded = true; }
-        card.classList.add("playing");
-        const p = video.play();
-        if (p && p.catch) p.catch(() => {});
-      };
-      const stop = () => {
-        card.classList.remove("playing");
-        video.pause();
-      };
-      card.addEventListener("mouseenter", play);
-      card.addEventListener("mouseleave", stop);
-      // Touch / click: first tap previews, opens reel
-      card.addEventListener("click", () => window.open(card.dataset.link, "_blank", "noopener"));
-      // Mobile: autoplay-in-view
-      if (matchMedia("(hover: none)").matches && "IntersectionObserver" in window) {
-        new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? play() : stop())), { threshold: 0.7 }).observe(card);
-      }
-    });
+        <div class="reel-cap"><strong>${r.title}</strong></div>
+      </a>`).join("");
   }
 
   /* ---------- Contact form -> WhatsApp ---------- */
@@ -230,12 +198,12 @@
     scene.add(new THREE.AmbientLight(0xffffff, 0.35));
     const key = new THREE.DirectionalLight(0xffe9b0, 1.1);
     key.position.set(6, 10, 6); scene.add(key);
-    const rim = new THREE.PointLight(0xd4af37, 1.4, 40);
+    const rim = new THREE.PointLight(0xb9a06e, 1.4, 40);
     rim.position.set(-8, 6, -4); scene.add(rim);
 
     // City group: a grid of buildings
     const city = new THREE.Group();
-    const gold = new THREE.Color(0xd4af37);
+    const gold = new THREE.Color(0xb9a06e);
     const dark = new THREE.Color(0x1a1d26);
     const cols = 7, rows = 7, gap = 1.7;
     for (let i = 0; i < cols; i++) {
@@ -254,7 +222,7 @@
         // wireframe overlay for tech feel
         const wire = new THREE.LineSegments(
           new THREE.EdgesGeometry(geo),
-          new THREE.LineBasicMaterial({ color: 0xd4af37, transparent: true, opacity: 0.18 })
+          new THREE.LineBasicMaterial({ color: 0xb9a06e, transparent: true, opacity: 0.16 })
         );
         m.add(wire);
         m.userData.baseY = m.position.y;
@@ -265,7 +233,7 @@
     scene.add(city);
 
     // Ground grid
-    const grid = new THREE.GridHelper(40, 40, 0xd4af37, 0x222530);
+    const grid = new THREE.GridHelper(40, 40, 0xb9a06e, 0x222530);
     grid.material.opacity = 0.12; grid.material.transparent = true;
     grid.position.y = -1.2; scene.add(grid);
 
@@ -275,7 +243,7 @@
     for (let i = 0; i < pCount * 3; i++) pos[i] = (Math.random() - 0.5) * 40;
     pGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     const particles = new THREE.Points(
-      pGeo, new THREE.PointsMaterial({ color: 0xd4af37, size: 0.06, transparent: true, opacity: 0.5 })
+      pGeo, new THREE.PointsMaterial({ color: 0xb9a06e, size: 0.06, transparent: true, opacity: 0.45 })
     );
     scene.add(particles);
 
