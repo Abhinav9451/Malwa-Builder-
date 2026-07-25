@@ -602,6 +602,11 @@ body.p-capture-guard .p-img,
 body.p-capture-guard #lbImg {
   filter: blur(22px) saturate(0.4) !important;
 }
+
+/* Printing (and print-to-PDF) is another clean route to the artwork */
+@media print {
+  .pgrid, .lb-photo, #lightbox, .reels { display: none !important; }
+}
 .projects-cta { text-align: center; margin-top: 44px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 .pgrid-more {
   display: block; width: fit-content; margin: 28px auto 0;
@@ -805,7 +810,9 @@ body.lb-open { overflow: hidden; }
   .pcard.wide { grid-column: span 2; }
   .pcard.lead { grid-column: span 2; grid-row: span 2; }
 }
-@media (max-width: 720px) {
+/* The full link row plus the CTA stops fitting below ~855px, so the menu
+   collapses here rather than waiting for the phone breakpoint. */
+@media (max-width: 900px) {
   .nav-links {
     position: fixed; inset: 0 0 0 auto; width: min(80%, 320px);
     flex-direction: column; align-items: flex-start; justify-content: center;
@@ -815,6 +822,8 @@ body.lb-open { overflow: hidden; }
   .nav-links.open { transform: translateX(0); }
   .nav:has(.nav-links.open) { background: var(--chrome-bg); border-bottom-color: var(--chrome-line); }
   .hamburger { display: flex; z-index: 901; }
+}
+@media (max-width: 720px) {
   /* Collides with the hero buttons on short phones, and scrolling is obvious on touch */
   .scroll-cue { display: none; }
   .cards, .timeline, .footer-grid { grid-template-columns: 1fr; }

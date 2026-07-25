@@ -313,17 +313,68 @@
     const lbImg = $("#lbImg");
     lbImg?.addEventListener("dragstart", (e) => e.preventDefault());
 
-    /* Blur briefly on Print Screen — cannot block OS capture, only discourage clean grabs */
-    document.addEventListener("keyup", (e) => {
-      if (e.key !== "PrintScreen") return;
+    /* An OS screen capture can never be blocked from a web page. All we can do is
+       blur the artwork the moment anything that smells like a capture happens. */
+    let guardTimer = 0;
+    const guard = (ms) => {
       document.body.classList.add("p-capture-guard");
-      setTimeout(() => document.body.classList.remove("p-capture-guard"), 1600);
+      clearTimeout(guardTimer);
+      guardTimer = setTimeout(() => document.body.classList.remove("p-capture-guard"), ms);
+    };
+    const release = (ms) => {
+      clearTimeout(guardTimer);
+      guardTimer = setTimeout(() => document.body.classList.remove("p-capture-guard"), ms);
+    };
+
+    /* Snipping Tool, Win+Shift+S and most capture apps steal window focus first.
+       Stay blurred for as long as we are away; the long timeout is only a safety
+       net so a stray blur event can never leave the gallery stuck. */
+    window.addEventListener("blur", () => guard(60000));
+    window.addEventListener("focus", () => release(400));
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") guard(60000);
+      else release(400);
     });
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") document.body.classList.add("p-capture-guard");
-      else setTimeout(() => document.body.classList.remove("p-capture-guard"), 400);
-    });
+    /* Put a blank image on the clipboard so a Print Screen grab pastes nothing */
+    async function wipeClipboard() {
+      if (!navigator.clipboard?.write || !window.ClipboardItem) return;
+      try {
+        const c = document.createElement("canvas");
+        c.width = c.height = 8;
+        const g = c.getContext("2d");
+        g.fillStyle = "#000";
+        g.fillRect(0, 0, 8, 8);
+        const blob = await new Promise((res) => c.toBlob(res, "image/png"));
+        if (blob) await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      } catch (_) {
+        /* clipboard writes need focus and permission — nothing to do if refused */
+      }
+    }
+
+    const isCaptureKey = (e) => {
+      if (e.key === "PrintScreen") return true;
+      const k = (e.key || "").toLowerCase();
+      if (e.shiftKey && (e.metaKey || e.ctrlKey) && k === "s") return true;   // Win/Ctrl + Shift + S
+      if (e.metaKey && e.shiftKey && ["3", "4", "5"].includes(k)) return true; // macOS grabs
+      return false;
+    };
+
+    ["keydown", "keyup"].forEach((ev) =>
+      document.addEventListener(ev, (e) => {
+        if (isCaptureKey(e)) {
+          e.preventDefault();
+          guard(2500);
+          wipeClipboard();
+          return;
+        }
+        const k = (e.key || "").toLowerCase();
+        if ((e.ctrlKey || e.metaKey) && ["s", "p", "u"].includes(k)) {
+          e.preventDefault();
+          guard(1400);
+        }
+      })
+    );
   }
 
   /* ---------- Lightbox for the project gallery ---------- */
