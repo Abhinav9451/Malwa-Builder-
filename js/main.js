@@ -955,6 +955,25 @@
       }
     }
 
+    /* Floor joists close each frame. They run further forward than the walls so
+       the near floor still fills the bottom of the frame instead of going void. */
+    const SLAB = -8;
+    for (let i = SLAB; i < RIBS; i++) {
+      const a = ribPoint(i, 0);
+      const b = ribPoint(i, 1);
+      const primary = i >= 0 && i % 5 === 0;
+      tube([a, a.clone().lerp(b, 0.5), b], 24, primary ? 0.06 : 0.034, primary ? ribMid : ribDim, 5);
+    }
+
+    /* Plan lines running the length of the floor */
+    const JOISTS = narrow() ? 7 : 11;
+    for (let j = 1; j < JOISTS - 1; j++) {
+      const f = j / (JOISTS - 1);
+      const pts = [];
+      for (let i = SLAB; i < RIBS; i++) pts.push(ribPoint(i, 0).lerp(ribPoint(i, 1), f));
+      tube(pts, (RIBS - SLAB) * 3, 0.026, ribDim, 5);
+    }
+
     const stage = new THREE.Group();
     stage.add(structure);
     scene.add(stage);
