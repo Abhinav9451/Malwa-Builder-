@@ -564,6 +564,54 @@
             delay: 1.8 + i * 0.1,
           });
         });
+
+        /* Walk cycle. Every limb path starts at its shoulder or hip, so the first
+           point of the "d" attribute is the joint to pivot on. GSAP measures
+           transformOrigin from the bounding box, hence the offset. */
+        $$(".figures .figure", svg).forEach((fig, i) => {
+          const pace = 0.9 + (i % 3) * 0.14;
+          const swing = (sel, amp) => {
+            const limb = $(sel, fig);
+            if (!limb) return;
+            const joint = /M\s*(-?[\d.]+)[\s,]+(-?[\d.]+)/.exec(limb.getAttribute("d") || "");
+            if (!joint) return;
+            const bb = limb.getBBox();
+            gsap.fromTo(limb,
+              { rotation: -amp },
+              {
+                rotation: amp,
+                transformOrigin: `${parseFloat(joint[1]) - bb.x}px ${parseFloat(joint[2]) - bb.y}px`,
+                duration: pace,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut",
+                delay: 1.4 + i * 0.12,
+              }
+            );
+          };
+          // opposite arm and leg travel together, the way a real gait works
+          swing(".fig-arm-l", 15);
+          swing(".fig-arm-r", -15);
+          swing(".fig-leg-l", -13);
+          swing(".fig-leg-r", 13);
+
+          gsap.to(fig, {
+            x: `+=${i % 2 ? -18 : 18}`,
+            duration: pace * 10,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            delay: 1.4,
+          });
+          gsap.to(fig, {
+            y: "-=1.5",
+            duration: pace / 2,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            delay: 1.4 + i * 0.12,
+          });
+        });
       } else {
         strokeEls.forEach((el) => { el.style.strokeDashoffset = "0"; });
         earthFills.forEach((el) => { el.style.opacity = "1"; });
@@ -730,7 +778,7 @@
 
     // Drawn edges on every volume are what make this read as a physical model
     function volume(geo, mat, x, y, z) {
-      const m = new THREE.Mesh(geo, mat);
+        const m = new THREE.Mesh(geo, mat);
       m.position.set(x, y, z);
       m.castShadow = true; m.receiveShadow = true;
       m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), INK));
