@@ -965,11 +965,13 @@
     function layout() {
       const k = Math.min(1, Math.max(0, (innerWidth - 640) / 900));
       if (narrow()) {
-        stage.position.set(0, 0, 0);
+        /* A phone's horizontal field is tiny, so pull the house down to a size
+           where the gable and both eaves stay inside the frame. */
+        stage.position.set(0, 1.4, 0);
         stage.rotation.set(0, 0, 0);
-        structure.scale.setScalar(0.92);
-        baseCam.set(0, -2, 13);
-        lookAt.set(0.8, 1.2, -24);
+        structure.scale.setScalar(0.55);
+        baseCam.set(0, -1.2, 12);
+        lookAt.set(0.5, 0.6, -20);
       } else {
         /* Shift the house right so the headline sits in the quieter half */
         stage.position.set(4.4 + k * 1.6, 0, 0);
@@ -979,6 +981,7 @@
         lookAt.set(0.8, 1.3, -26);
       }
       camera.aspect = innerWidth / innerHeight;
+      camera.fov = narrow() ? 62 : 42;
       camera.updateProjectionMatrix();
       renderer.setSize(innerWidth, innerHeight);
     }
