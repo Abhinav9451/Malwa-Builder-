@@ -5,13 +5,16 @@ two WebP sizes per image: one for the gallery grid, one for the lightbox.
 Re-run after adding renders to SOURCE.
 """
 import os
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 SOURCE = r"C:\Users\Abhey\Downloads\Malwa Builders"
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "projects")
 
 GRID_W, GRID_Q = 1400, 78
 FULL_W, FULL_Q = 2400, 82
+
+# Site page background — sky in exteriors is tinted toward this before export
+PAGE_BG = (246, 243, 236)
 
 # source file -> output slug
 IMAGES = [
@@ -35,11 +38,80 @@ IMAGES = [
     ("Conference Room.png", "office-conference"),
 ]
 
+INTERIOR_SLUGS = frozenset({
+    "office-reception", "office-waiting", "office-cabin", "office-conference",
+})
+
 
 def resize(im, width):
     if im.width <= width:
         return im.copy()
     return im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+
+
+def sky_blend(im: Image.Image) -> None:
+    """Soft top band: sky reads as the same cream as the page (--bg)."""
+    w, h = im.size
+    band = max(1, int(h * 0.22))
+    overlay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    px = overlay.load()
+    for y in range(band):
+        t = 1.0 - (y / band) ** 1.55
+        alpha = int(255 * t * 0.72)
+        for x in range(w):
+            px[x, y] = (*PAGE_BG, alpha)
+    im.paste(overlay, (0, 0), overlay)
+
+
+def _wm_font(size: int):
+    for name in ("georgia.ttf", "times.ttf", "arial.ttf"):
+        try:
+            return ImageFont.truetype(name, size)
+        except OSError:
+            continue
+    return ImageFont.load_default()
+
+
+def watermark(im: Image.Image, *, full: bool) -> None:
+    """Diagonal tile + center mark — survives casual screenshot saves."""
+    w, h = im.size
+    layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer)
+    tile_size = max(14, w // (48 if full else 58))
+    font = _wm_font(tile_size)
+    text = "MALWA BUILDERS"
+    step = int(tile_size * 7.2)
+    angle = -24
+
+    tile = Image.new("RGBA", (step * 2, step * 2), (0, 0, 0, 0))
+    tdraw = ImageDraw.Draw(tile)
+    for ty in range(-step, step * 2, step):
+        for tx in range(-step, step * 2, step):
+            tdraw.text((tx + step // 3, ty + step // 3), text, fill=(255, 255, 255, 38), font=font)
+    tile = tile.rotate(angle, expand=True, resample=Image.BICUBIC)
+    for oy in range(-tile.height, h + tile.height, max(1, tile.height // 2)):
+        for ox in range(-tile.width, w + tile.width, max(1, tile.width // 2)):
+            layer.paste(tile, (ox, oy), tile)
+
+    center_size = max(18, w // (22 if full else 28))
+    cf = _wm_font(center_size)
+    bbox = draw.textbbox((0, 0), text, font=cf)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    mark = Image.new("RGBA", (tw + 40, th + 40), (0, 0, 0, 0))
+    md = ImageDraw.Draw(mark)
+    md.text((20, 20), text, fill=(255, 255, 255, 72 if full else 58), font=cf)
+    mark = mark.rotate(-14, expand=True, resample=Image.BICUBIC)
+    layer.paste(mark, ((w - mark.width) // 2, (h - mark.height) // 2 - h // 28), mark)
+
+    im.paste(layer, (0, 0), layer)
+
+
+def process(im: Image.Image, slug: str, full: bool) -> Image.Image:
+    out = im.copy()
+    if slug not in INTERIOR_SLUGS:
+        sky_blend(out)
+    watermark(out, full=full)
+    return out
 
 
 def main():
@@ -51,9 +123,14 @@ def main():
             print(f"MISSING  {name}")
             continue
         im = Image.open(src).convert("RGB")
-        for width, quality, suffix in ((GRID_W, GRID_Q, ""), (FULL_W, FULL_Q, "-full")):
+        for width, quality, suffix, full in (
+            (GRID_W, GRID_Q, "", False),
+            (FULL_W, FULL_Q, "-full", True),
+        ):
             path = os.path.join(OUT, f"{slug}{suffix}.webp")
-            resize(im, width).save(path, "WEBP", quality=quality, method=6)
+            sized = resize(im, width)
+            processed = process(sized, slug, full)
+            processed.save(path, "WEBP", quality=quality, method=6)
             total += os.path.getsize(path)
         im.close()
         grid = os.path.getsize(os.path.join(OUT, slug + ".webp")) / 1024

@@ -48,10 +48,35 @@
     const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
   }
 
-  /* ---------- Loader ---------- */
-  window.addEventListener("load", () => {
-    setTimeout(() => $("#loader") && $("#loader").classList.add("hidden"), 700);
-  });
+  /* ---------- Loader: wait for HD logo + page, then dismiss ---------- */
+  function dismissLoader() {
+    const loader = $("#loader");
+    const mark = $(".loader-mark");
+    if (!loader) return;
+
+    const hide = () => {
+      setTimeout(() => loader.classList.add("hidden"), 550);
+    };
+
+    const whenLogo = () =>
+      new Promise((resolve) => {
+        if (!mark || (mark.complete && mark.naturalWidth > 0)) {
+          resolve();
+          return;
+        }
+        mark.addEventListener("load", resolve, { once: true });
+        mark.addEventListener("error", resolve, { once: true });
+      });
+
+    const whenPage = () =>
+      new Promise((resolve) => {
+        if (document.readyState === "complete") resolve();
+        else window.addEventListener("load", resolve, { once: true });
+      });
+
+    Promise.all([whenLogo(), whenPage()]).then(hide);
+  }
+  dismissLoader();
 
   /* ---------- Navbar scroll + mobile menu ---------- */
   function nav() {
@@ -147,9 +172,6 @@
     { id: "interiors",  label: "Interiors" },
   ];
 
-  /* span: lead = 4 cols x 2 rows, wide = 3 cols, blank = 2 cols.
-     ("hero" is avoided as a class name - it collides with the hero section.)
-     Wide slots are panoramic, so only long-and-low compositions go there. */
   const PROJECTS = [
     { img: "villa-front",          cat: "villas",    span: "lead", title: "Neoclassical Grand Villa",      shot: "Front elevation & forecourt" },
     { img: "villa-portico",        cat: "villas",    span: "",     title: "Neoclassical Grand Villa",      shot: "Portico & driveway" },
@@ -171,22 +193,60 @@
     { img: "office-conference",    cat: "interiors", span: "",     title: "Corporate Office Fit-Out",      shot: "Conference room" },
   ];
 
+  const PORTFOLIO_PREVIEW = 8;
+
   function projectGallery() {
     const grid = $("#projectGrid");
     const bar = $("#projectFilters");
+    const moreBtn = $("#projectShowMore");
     if (!grid) return;
 
-    grid.innerHTML = PROJECTS.map((p, i) => `
-      <button class="pcard ${p.span}" type="button" data-cat="${p.cat}" data-i="${i}"
+    let portfolioExpanded = false;
+
+    grid.innerHTML = PROJECTS.map((p, i) => {
+      const ext = p.cat !== "interiors";
+      return `
+      <button class="pcard ${p.span}${ext ? " pcard--ext" : " pcard--int"}" type="button" data-cat="${p.cat}" data-i="${i}"
               aria-label="${p.title}, ${p.shot} — open full screen">
-        <img src="assets/projects/${p.img}.webp" alt="${p.title} — ${p.shot}" loading="lazy" decoding="async" />
+        <span class="p-media">
+          <img class="p-img" src="assets/projects/${p.img}.webp" alt="${p.title} — ${p.shot}" loading="lazy" decoding="async" draggable="false" />
+          ${ext ? '<span class="p-skyfade" aria-hidden="true"></span>' : ""}
+          <span class="p-wm-tile" aria-hidden="true"></span>
+          <span class="p-wm-mark" aria-hidden="true">MALWA BUILDERS</span>
+        </span>
+        <span class="p-shield" aria-hidden="true"></span>
         <span class="pzoom" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6M11 8v6M8 11h6"/></svg>
         </span>
         <span class="pcap"><strong>${p.title}</strong><span>${p.shot}</span></span>
-      </button>`).join("");
+      </button>`;
+    }).join("");
 
     const cards = $$(".pcard", grid);
+
+    function syncPortfolioFold() {
+      let n = 0;
+      let totalVisible = 0;
+      cards.forEach((c) => {
+        if (c.classList.contains("is-hidden")) {
+          c.classList.remove("is-folded");
+          return;
+        }
+        totalVisible += 1;
+        n += 1;
+        c.classList.toggle("is-folded", !portfolioExpanded && n > PORTFOLIO_PREVIEW);
+      });
+      if (moreBtn) {
+        const needMore = totalVisible > PORTFOLIO_PREVIEW;
+        moreBtn.classList.toggle("is-hidden", !needMore);
+        const extra = totalVisible - PORTFOLIO_PREVIEW;
+        moreBtn.textContent = portfolioExpanded
+          ? "Show fewer projects"
+          : `View all projects (${extra} more)`;
+        moreBtn.setAttribute("aria-expanded", portfolioExpanded ? "true" : "false");
+      }
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    }
 
     // Cards fade up as they enter view, independent of the global reveal pass
     const io = new IntersectionObserver((entries) => {
@@ -211,14 +271,59 @@
           cards.forEach((c) => {
             const show = cat === "all" || c.dataset.cat === cat;
             c.classList.toggle("is-hidden", !show);
-            if (show) c.classList.add("in"); // never leave a filtered-in card blank
+            if (show) c.classList.add("in");
           });
-          if (window.ScrollTrigger) ScrollTrigger.refresh();
+          syncPortfolioFold();
         });
       });
     }
 
+    if (moreBtn) {
+      moreBtn.addEventListener("click", () => {
+        portfolioExpanded = !portfolioExpanded;
+        syncPortfolioFold();
+      });
+    }
+
+    syncPortfolioFold();
+
     lightbox(cards);
+    portfolioProtect();
+  }
+
+  /* ---------- Portfolio: deter casual saving / copying (best-effort on web) ---------- */
+  function portfolioProtect() {
+    const zone = $("#projects");
+    const box = $("#lightbox");
+    if (!zone) return;
+
+    zone.classList.add("p-protected");
+
+    const block = (e) => {
+      const t = e.target;
+      if (t.closest?.(".pcard, .lb-photo, #lbImg, .p-img")) e.preventDefault();
+    };
+    zone.addEventListener("contextmenu", block);
+    box?.addEventListener("contextmenu", block);
+    zone.addEventListener("dragstart", block, true);
+
+    zone.querySelectorAll(".p-img").forEach((img) => {
+      img.addEventListener("dragstart", (e) => e.preventDefault());
+    });
+    const lbImg = $("#lbImg");
+    lbImg?.addEventListener("dragstart", (e) => e.preventDefault());
+
+    /* Blur briefly on Print Screen — cannot block OS capture, only discourage clean grabs */
+    document.addEventListener("keyup", (e) => {
+      if (e.key !== "PrintScreen") return;
+      document.body.classList.add("p-capture-guard");
+      setTimeout(() => document.body.classList.remove("p-capture-guard"), 1600);
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") document.body.classList.add("p-capture-guard");
+      else setTimeout(() => document.body.classList.remove("p-capture-guard"), 400);
+    });
   }
 
   /* ---------- Lightbox for the project gallery ---------- */
@@ -229,7 +334,8 @@
     const title = $("#lbTitle"), meta = $("#lbMeta");
     let idx = 0;
 
-    const visible = () => cards.filter((c) => !c.classList.contains("is-hidden"));
+    const visible = () =>
+      cards.filter((c) => !c.classList.contains("is-hidden") && !c.classList.contains("is-folded"));
 
     const show = (card) => {
       idx = cards.indexOf(card);
@@ -239,6 +345,8 @@
       img.alt = `${p.title} — ${p.shot}`;
       if (title) title.textContent = p.title;
       if (meta) meta.textContent = `${p.shot} · ${list.indexOf(card) + 1} / ${list.length}`;
+      const sky = $(".lb-skyfade", box);
+      if (sky) sky.classList.toggle("is-off", p.cat === "interiors");
     };
 
     const open = (card) => {
@@ -706,122 +814,169 @@
     addEventListener("resize", layout);
   }
 
-  /* ---------- Three.js hero: architectural rib grid (Calatrava-style) ---------- */
+  /* ---------- Hero: Calatrava-style white ribs on black (reference grid) ---------- */
   function heroRibGrid() {
     const canvas = $("#heroCanvas");
     if (!canvas || !window.THREE) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const SCALE = 1.72;
+    const narrow = () => innerWidth < 900;
+    const BG = 0x080808;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0b0d11, 0.014);
+    scene.fog = new THREE.Fog(BG, 20, 66);
+    scene.background = new THREE.Color(BG);
 
-    const camera = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.1, 200);
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 200);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setSize(innerWidth, innerHeight);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.setClearColor(0x0b0d11, 1);
+    renderer.setClearColor(BG, 1);
 
-    scene.add(new THREE.AmbientLight(0x9a9590, 0.28));
-    const key = new THREE.DirectionalLight(0xffffff, 1.25);
-    key.position.set(8, 12, 16);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+    const key = new THREE.DirectionalLight(0xffffff, 2.1);
+    key.position.set(-12, 22, 16);
     scene.add(key);
-    const fill = new THREE.DirectionalLight(0xc8c0b4, 0.45);
-    fill.position.set(-6, 2, 10);
+    const fill = new THREE.DirectionalLight(0xd8d8d8, 0.55);
+    fill.position.set(8, 4, 20);
     scene.add(fill);
-    const rim = new THREE.DirectionalLight(0xd4bc8a, 0.42);
-    rim.position.set(-10, 6, -8);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.7);
+    rim.position.set(18, 6, -12);
     scene.add(rim);
+    /* Sits inside the vault so the shell falls off into the depth */
+    const core = new THREE.PointLight(0xffffff, 55, 46, 2);
+    core.position.set(0, 2.5, -4);
+    scene.add(core);
 
-    const vault = new THREE.Group();
-    scene.add(vault);
-
-    const ribMat = new THREE.MeshStandardMaterial({
+    const ribBright = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      metalness: 0.28,
-      roughness: 0.26,
-      emissive: 0x4a4540,
-      emissiveIntensity: 0.18,
+      emissive: 0x2a2a2a,
+      metalness: 0.12,
+      roughness: 0.34,
     });
-    const ribGhost = ribMat.clone();
-    ribGhost.transparent = true;
-    ribGhost.opacity = 0.28;
-    ribGhost.color.setHex(0xe8e2d8);
+    const ribMid = new THREE.MeshStandardMaterial({
+      color: 0xdedede,
+      emissive: 0x1d1d1d,
+      metalness: 0.1,
+      roughness: 0.44,
+    });
+    const ribDim = new THREE.MeshStandardMaterial({
+      color: 0xb4b4b4,
+      emissive: 0x141414,
+      metalness: 0.08,
+      roughness: 0.52,
+    });
 
-    const RIBS = 58;
-    const SEG = 44;
+    const structure = new THREE.Group();
 
-    function ribPoints(index, layer) {
-      const v = index / (RIBS - 1);
-      const layerOff = layer * 0.14;
-      const pts = [];
-      for (let i = 0; i <= SEG; i++) {
-        const u = i / SEG;
-        const sweep = u * Math.PI * 0.98;
-        const fan = (v - 0.5) * 10.5;
-        const twist = u * 0.48 + v * 0.32 + layerOff;
-        const radius = 3.0 + u * 7.8 + Math.sin(v * Math.PI) * 1.1;
-        let x = Math.cos(sweep + twist) * radius + fan * 0.62 + u * 5.6;
-        let y = Math.sin(sweep * 0.52) * 3.6 + u * 8.2 - 4.0 + Math.sin(u * Math.PI) * 1.35;
-        let z = Math.sin(sweep + twist) * radius * 0.72 + fan * 1.05 + (u - 0.5) * 3.2;
-        x *= SCALE;
-        y *= SCALE;
-        z *= SCALE;
-        pts.push(new THREE.Vector3(x, y, z));
+    /* A house in section, repeated down its length: wall, eave, pitched roof
+       to the ridge and back down, tied together by longitudinal purlins. */
+    const FLOOR = -7.2;
+    const HALF = 9.5;                  // half-width of the house
+    const EAVE = 7.6;                  // wall height
+    const RIDGE = 14.6;                // apex height
+    const RIBS = narrow() ? 20 : 30;   // frames down the length
+    const DZ = 2.15;                   // spacing between frames
+    const Z0 = 6;                      // nearest frame
+    const TWIST = 0.0018;
+
+    const SLOPE = Math.hypot(HALF, RIDGE - EAVE);
+    const PERIM = 2 * EAVE + 2 * SLOPE;
+    const T_EAVE = EAVE / PERIM;       // t of the eave line on the profile
+
+    /* Walk the outline by length so the frame spaces evenly around it */
+    function profile(t) {
+      const d = t * PERIM;
+      if (d <= EAVE) return [-HALF, d];
+      if (d <= EAVE + SLOPE) {
+        const k = (d - EAVE) / SLOPE;
+        return [-HALF + k * HALF, EAVE + k * (RIDGE - EAVE)];
       }
-      return pts;
+      if (d <= EAVE + 2 * SLOPE) {
+        const k = (d - EAVE - SLOPE) / SLOPE;
+        return [k * HALF, RIDGE - k * (RIDGE - EAVE)];
+      }
+      return [HALF, EAVE - (d - EAVE - 2 * SLOPE)];
     }
 
-    for (let r = 0; r < RIBS; r++) {
-      const curve = new THREE.CatmullRomCurve3(ribPoints(r, 0));
-      const t = r / (RIBS - 1);
-      const tubeR = (0.042 + (1 - Math.abs(t - 0.5) * 1.75) * 0.038) * (SCALE * 0.55);
-      const geo = new THREE.TubeGeometry(curve, 56, tubeR, 7, false);
-      vault.add(new THREE.Mesh(geo, ribMat));
-    }
-    for (let r = 0; r < RIBS; r += 2) {
-      const curve = new THREE.CatmullRomCurve3(ribPoints(r, 1));
-      const geo = new THREE.TubeGeometry(curve, 40, 0.028 * SCALE, 6, false);
-      vault.add(new THREE.Mesh(geo, ribGhost));
+    function ribPoint(i, t) {
+      const grow = 1 + 0.02 * Math.sin(i * 0.45);
+      const p = profile(t);
+      const x = p[0] * grow;
+      const y = p[1] * grow;
+      const a = i * TWIST;
+      const ca = Math.cos(a), sa = Math.sin(a);
+      return new THREE.Vector3(x * ca - y * sa, FLOOR + (x * sa + y * ca), Z0 - i * DZ);
     }
 
-    function addGrid(size, divisions, opacity, rotX, rotY, y, z) {
-      const g = new THREE.GridHelper(size, divisions, 0x4a4540, 0x252320);
-      g.material.opacity = opacity;
-      g.material.transparent = true;
-      g.rotation.set(rotX, rotY, 0);
-      g.position.set(4.2 * SCALE, y, z);
-      vault.add(g);
+    function tube(pts, seg, rad, mat, radial) {
+      structure.add(
+        new THREE.Mesh(
+          new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), seg, rad, radial || 6, false),
+          mat
+        )
+      );
     }
-    addGrid(42 * SCALE, 84, 0.2, Math.PI / 2, 0, -5.5 * SCALE, -1.5);
-    addGrid(36 * SCALE, 72, 0.1, Math.PI / 2.4, 0.35, -4 * SCALE, 2);
+
+    /* Transverse frames — the house outline */
+    for (let i = 0; i < RIBS; i++) {
+      const pts = [];
+      for (let s = 0; s <= 96; s++) pts.push(ribPoint(i, s / 96));
+      const primary = i % 5 === 0;
+      tube(pts, 120, primary ? 0.09 : 0.05, primary ? ribBright : i % 2 ? ribDim : ribMid, primary ? 8 : 6);
+    }
+
+    /* Purlins down the length — ridge and eaves called out heavier */
+    const LINES = narrow() ? 15 : 23;
+    const rails = [];
+    for (let j = 0; j < LINES; j++) rails.push(j / (LINES - 1));
+    rails.push(T_EAVE, 1 - T_EAVE);
+
+    rails.forEach((t) => {
+      const pts = [];
+      for (let i = 0; i < RIBS; i++) pts.push(ribPoint(i, t));
+      const ridge = Math.abs(t - 0.5) < 1e-6;
+      const eave = Math.abs(t - T_EAVE) < 1e-6 || Math.abs(t - (1 - T_EAVE)) < 1e-6;
+      tube(pts, RIBS * 3, ridge ? 0.075 : eave ? 0.055 : 0.03, ridge ? ribBright : eave ? ribMid : ribDim);
+    });
+
+    /* Bracing across both roof planes */
+    for (let i = 0; i < RIBS - 2; i += 2) {
+      for (const right of [false, true]) {
+        const pts = [];
+        for (let s = 0; s <= 10; s++) {
+          const k = s / 10;
+          const t = right
+            ? 1 - T_EAVE - k * (0.5 - T_EAVE)
+            : T_EAVE + k * (0.5 - T_EAVE);
+          pts.push(ribPoint(i + k * 2, t));
+        }
+        tube(pts, 24, 0.022, ribDim, 5);
+      }
+    }
 
     const stage = new THREE.Group();
-    stage.add(vault);
+    stage.add(structure);
     scene.add(stage);
 
     const baseCam = new THREE.Vector3();
     const lookAt = new THREE.Vector3();
-    let baseRotY = -0.36;
 
     function layout() {
-      const k = Math.min(1, Math.max(0, (innerWidth - 680) / 720));
-      const narrow = innerWidth < 720;
-      if (narrow) {
-        stage.position.set(0.2, -1.6, 0.5);
-        stage.rotation.set(-0.1, -0.22, 0.03);
-        vault.scale.setScalar(1.12);
-        baseCam.set(0, 0.2, 12.8);
-        lookAt.set(1.2, 0.6, 0);
-        baseRotY = -0.22;
+      const k = Math.min(1, Math.max(0, (innerWidth - 640) / 900));
+      if (narrow()) {
+        stage.position.set(0, 0, 0);
+        stage.rotation.set(0, 0, 0);
+        structure.scale.setScalar(0.92);
+        baseCam.set(0, -2, 13);
+        lookAt.set(0.8, 1.2, -24);
       } else {
-        stage.position.set(0.6 + k * 1.4, -2.0, -0.8);
-        stage.rotation.set(-0.05, -0.36 - k * 0.08, 0.035);
-        vault.scale.setScalar(1.38 + k * 0.42);
-        baseCam.set(-0.15 * (1 - k), 0.35, 9.2 - k * 0.8);
-        lookAt.set(2.2 + k * 3.2, 1.0, 0);
-        baseRotY = -0.36 - k * 0.08;
+        /* Shift the house right so the headline sits in the quieter half */
+        stage.position.set(4.4 + k * 1.6, 0, 0);
+        stage.rotation.set(0, 0, 0);
+        structure.scale.setScalar(1);
+        baseCam.set(0, -1.6, 13.5);
+        lookAt.set(0.8, 1.3, -26);
       }
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
@@ -839,25 +994,212 @@
 
     const clock = new THREE.Clock();
     function animate() {
-      const t = clock.getElapsedTime();
       if (!reduced) {
-        vault.rotation.y = Math.sin(t * 0.1) * 0.035;
-        vault.rotation.z = Math.sin(t * 0.07) * 0.018;
-        stage.rotation.y = baseRotY + mx * 0.06;
+        const t = clock.getElapsedTime();
+        stage.rotation.y = mx * 0.03 + Math.sin(t * 0.05) * 0.008;
+        structure.rotation.z = Math.sin(t * 0.07) * 0.005;
       }
-      camera.position.x += (baseCam.x + mx * 2.2 - camera.position.x) * 0.04;
-      camera.position.y += (baseCam.y - my * 1.4 - camera.position.y) * 0.04;
-      camera.position.z += (baseCam.z - camera.position.z) * 0.04;
-      camera.lookAt(
-        lookAt.x + mx * 0.75,
-        lookAt.y - my * 0.45,
-        lookAt.z
-      );
+      camera.position.x += (baseCam.x + mx * 1.2 - camera.position.x) * 0.035;
+      camera.position.y += (baseCam.y - my * 0.8 - camera.position.y) * 0.035;
+      camera.position.z += (baseCam.z - camera.position.z) * 0.035;
+      camera.lookAt(lookAt.x + mx * 0.4, lookAt.y - my * 0.25, lookAt.z);
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
     animate();
     addEventListener("resize", layout);
+  }
+
+  /* ---------- Shooting stars — full site, multi-color ---------- */
+  function shootingStars() {
+    const canvas = $("#shootingStars");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const stars = [];
+    const MAX_ACTIVE = reduced ? 4 : 11;
+    let w = 0;
+    let h = 0;
+    let dpr = 1;
+
+    const PALETTES = [
+      {
+        id: "gold",
+        dark: { head: [255, 248, 230], mid: [201, 169, 98], glow: "rgba(201,169,98,0.9)" },
+        light: { head: [154, 127, 74], mid: [201, 169, 98], glow: "rgba(154,127,74,0.65)" },
+      },
+      {
+        id: "white",
+        dark: { head: [255, 255, 255], mid: [235, 232, 226], glow: "rgba(255,255,255,0.8)" },
+        light: { head: [58, 46, 32], mid: [120, 105, 88], glow: "rgba(90,72,48,0.5)" },
+      },
+      {
+        id: "champagne",
+        dark: { head: [255, 236, 210], mid: [218, 185, 130], glow: "rgba(255,220,170,0.85)" },
+        light: { head: [130, 100, 62], mid: [185, 150, 95], glow: "rgba(185,150,95,0.55)" },
+      },
+      {
+        id: "rose",
+        dark: { head: [255, 228, 220], mid: [220, 160, 140], glow: "rgba(255,200,180,0.75)" },
+        light: { head: [120, 72, 68], mid: [180, 120, 110], glow: "rgba(160,100,90,0.45)" },
+      },
+      {
+        id: "ice",
+        dark: { head: [230, 242, 255], mid: [170, 200, 230], glow: "rgba(200,225,255,0.8)" },
+        light: { head: [70, 90, 120], mid: [130, 155, 185], glow: "rgba(100,130,170,0.45)" },
+      },
+      {
+        id: "amber",
+        dark: { head: [255, 210, 140], mid: [230, 160, 70], glow: "rgba(255,180,80,0.85)" },
+        light: { head: [140, 90, 35], mid: [200, 140, 60], glow: "rgba(180,120,50,0.5)" },
+      },
+    ];
+
+    function pickPalette() {
+      const roll = Math.random();
+      if (roll < 0.28) return PALETTES[0];
+      if (roll < 0.48) return PALETTES[1];
+      if (roll < 0.62) return PALETTES[2];
+      if (roll < 0.74) return PALETTES[3];
+      if (roll < 0.88) return PALETTES[4];
+      return PALETTES[5];
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = innerWidth;
+      h = innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+    }
+
+    function toneAt(y) {
+      for (const sel of ["#home", ".footer", ".nav"]) {
+        const el = document.querySelector(sel);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        if (y >= r.top && y <= r.bottom) return "dark";
+      }
+      return "light";
+    }
+
+    function spawn() {
+      if (stars.length >= MAX_ACTIVE) return;
+      const angle = 0.32 + Math.random() * 0.34;
+      const speed = 7 + Math.random() * 11;
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed;
+      const y = Math.random() * h * 0.82 + 2;
+      const big = Math.random() < 0.18;
+      stars.push({
+        x: Math.random() * w * 0.98 + w * 0.01,
+        y,
+        vx,
+        vy,
+        len: (big ? 140 : 90) + Math.random() * (big ? 200 : 150),
+        w: big ? 1.8 + Math.random() * 1.2 : 0.9 + Math.random() * 1.5,
+        life: 1,
+        fade: reduced ? 0.0055 : 0.006 + Math.random() * 0.005,
+        palette: pickPalette(),
+        tone: toneAt(y),
+        shimmer: Math.random() * Math.PI * 2,
+      });
+    }
+
+    function spawnBurst(count) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(spawn, i * (120 + Math.random() * 200));
+      }
+    }
+
+    function rgba(c, a) {
+      return `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+    }
+
+    function drawStar(s) {
+      const mag = Math.hypot(s.vx, s.vy) || 1;
+      const tailLen = s.len * (0.36 + s.life * 0.1);
+      const tailX = s.x - (s.vx / mag) * tailLen;
+      const tailY = s.y - (s.vy / mag) * tailLen;
+      const dark = s.tone === "dark";
+      const pal = dark ? s.palette.dark : s.palette.light;
+      const pulse = 0.88 + Math.sin(s.shimmer + s.life * 8) * 0.12;
+
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.shadowBlur = dark ? 14 : 7;
+      ctx.shadowColor = pal.glow;
+
+      const g = ctx.createLinearGradient(s.x, s.y, tailX, tailY);
+      g.addColorStop(0, rgba(pal.head, s.life * pulse));
+      g.addColorStop(0.35, rgba(pal.mid, s.life * 0.55 * pulse));
+      g.addColorStop(0.7, rgba(pal.mid, s.life * 0.15));
+      g.addColorStop(1, "rgba(255,255,255,0)");
+
+      ctx.strokeStyle = g;
+      ctx.lineWidth = s.w;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(tailX, tailY);
+      ctx.stroke();
+
+      ctx.lineWidth = Math.max(0.35, s.w * 0.35);
+      ctx.globalAlpha = s.life * 0.35;
+      ctx.strokeStyle = rgba(pal.head, 0.5);
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(tailX - (s.vx / mag) * 12, tailY - (s.vy / mag) * 12);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      ctx.shadowBlur = dark ? 10 : 5;
+      ctx.fillStyle = rgba(pal.head, s.life * pulse);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.w * 1.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = rgba([255, 255, 255], s.life * 0.45 * pulse);
+      ctx.beginPath();
+      ctx.arc(s.x - 0.4, s.y - 0.4, s.w * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    let nextAt = 0;
+    function tick(now) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (now >= nextAt) {
+        spawn();
+        if (!reduced && Math.random() < 0.42) spawn();
+        if (!reduced && Math.random() < 0.12) spawnBurst(2 + Math.floor(Math.random() * 2));
+        nextAt = now + (reduced ? 4000 : 700) + Math.random() * 1800;
+      }
+
+      for (let i = stars.length - 1; i >= 0; i--) {
+        const s = stars[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life -= s.fade;
+        s.shimmer += 0.08;
+        s.tone = toneAt(s.y);
+        drawStar(s);
+        if (s.life <= 0 || s.x > w + 200 || s.y > h + 200) stars.splice(i, 1);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    resize();
+    spawnBurst(3);
+    window.addEventListener("resize", resize);
+    requestAnimationFrame(tick);
   }
 
   /* ---------- Init ---------- */
@@ -872,6 +1214,7 @@
     reveals();
     atelierScene();
     heroRibGrid();
+    window.addEventListener("load", () => shootingStars(), { once: true });
     // hero3DHouse(); // previous revolving villa model
   });
 })();
