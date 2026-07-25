@@ -9,6 +9,7 @@
   <meta property="og:title" content="Malwa Builders — Luxury Homes, Bungalows & Farmhouses" />
   <meta property="og:description" content="We build luxury houses with proper inside-out elevation detailing and full architecture planning." />
   <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0b0d11" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 
   <!-- Fonts -->
@@ -42,6 +43,7 @@
       <nav class="nav-links" id="navLinks">
         <a href="#home">Home</a>
         <a href="#about">About</a>
+        <a href="#studio">Studio</a>
         <a href="#services">Services</a>
         <a href="#process">Process</a>
         <a href="#projects">Projects</a>
@@ -121,6 +123,489 @@
     </div>
   </section>
 
+  <!-- ===== Architecture Studio — animated section drawing ===== -->
+  <section class="atelier" id="studio" aria-label="Architecture studio showcase">
+    <div class="atelier-ambient" aria-hidden="true"></div>
+    <div class="container atelier-wrap">
+      <div class="atelier-head reveal">
+        <p class="eyebrow">Architecture Studio</p>
+        <h2>Lines That Become <span class="gold">Homes</span></h2>
+        <p class="section-lead">A living section — how Malwa Builders thinks in structure, light and human scale.</p>
+      </div>
+
+      <div class="atelier-board" id="atelierBoard">
+        <!-- Drafting corner marks -->
+        <span class="atelier-corner tl" aria-hidden="true"></span>
+        <span class="atelier-corner tr" aria-hidden="true"></span>
+        <span class="atelier-corner bl" aria-hidden="true"></span>
+        <span class="atelier-corner br" aria-hidden="true"></span>
+
+        <p class="atelier-quote">“Built with vision. Finished with soul.”</p>
+
+        <div class="atelier-stage" id="atelierStage">
+          <svg class="atelier-svg" id="atelierSvg" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animated architectural section through a hillside residence">
+            <defs>
+              <!-- Cut concrete: 45 degree poche hatch, the section convention -->
+              <pattern id="poche" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="7" stroke="#f3efe6" stroke-width="1" opacity=".32"/>
+              </pattern>
+              <!-- Granular sub-base / drainage gravel -->
+              <pattern id="gravel" width="9" height="9" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2.5" r="1.3" fill="#b9a06e" opacity=".38"/>
+                <circle cx="6.5" cy="6" r="1.1" fill="#b9a06e" opacity=".3"/>
+                <circle cx="7" cy="1.5" r="0.8" fill="#cdb98c" opacity=".22"/>
+              </pattern>
+              <pattern id="earthGrain" patternUnits="userSpaceOnUse" width="8" height="8">
+                <circle cx="1.5" cy="2" r="0.6" fill="#6b4b2c" opacity=".55"/>
+                <circle cx="5" cy="5.5" r="0.5" fill="#7a5734" opacity=".4"/>
+                <circle cx="6.5" cy="1.5" r="0.4" fill="#8a6440" opacity=".35"/>
+                <circle cx="3" cy="6" r="0.35" fill="#5c4030" opacity=".3"/>
+              </pattern>
+              <linearGradient id="earthDepth" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#26180b"/>
+                <stop offset="40%" stop-color="#170e07"/>
+                <stop offset="100%" stop-color="#0a0603"/>
+              </linearGradient>
+              <!-- Light living inside the section -->
+              <radialGradient id="warmGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#d0ad6c" stop-opacity=".32"/>
+                <stop offset="55%" stop-color="#a3854f" stop-opacity=".12"/>
+                <stop offset="100%" stop-color="#8d6e3c" stop-opacity="0"/>
+              </radialGradient>
+              <marker id="arrowAir" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0 1 L9 5 L0 9 z" fill="#b9a06e" opacity=".75"/>
+              </marker>
+            </defs>
+
+            <!-- ============ SKY ============ -->
+            <g class="layer-sky" data-depth="0.15">
+              <g class="celestial" transform="translate(130,116)">
+                <circle class="draw-line" cx="0" cy="0" r="30" fill="#f3efe6"/>
+                <circle class="draw-line" cx="0" cy="0" r="46" fill="none" stroke="#f3efe6" stroke-width="1" opacity=".5"/>
+                <circle class="draw-line" cx="0" cy="0" r="62" fill="none" stroke="#b9a06e" stroke-width=".8" opacity=".3"/>
+                <circle class="fade-in" cx="44" cy="-42" r="2.6" fill="#b9a06e" opacity=".8"/>
+              </g>
+              <g class="birds" fill="none" stroke="#f3efe6" stroke-width="1.4" stroke-linecap="round">
+                <path class="bird" d="M604 70 q11 -9 22 0"/>
+                <path class="bird" d="M646 58 q9 -7 18 0"/>
+                <path class="bird" d="M682 76 q10 -8 20 0"/>
+                <path class="bird" d="M722 62 q8 -6 16 0"/>
+                <path class="bird" d="M760 74 q9 -7 18 0"/>
+              </g>
+            </g>
+
+            <!-- ============ COLUMN GRID (drawn behind everything) ============ -->
+            <g class="grid fade-in">
+              <g stroke="#b9a06e" stroke-width=".7" opacity=".2" stroke-dasharray="7 9">
+                <path d="M250 114 V646"/>
+                <path d="M530 114 V646"/>
+                <path d="M670 114 V646"/>
+                <path d="M810 114 V646"/>
+                <path d="M950 114 V646"/>
+              </g>
+              <g fill="none" stroke="#b9a06e" stroke-width=".9" opacity=".55">
+                <circle cx="250" cy="100" r="13"/>
+                <circle cx="530" cy="100" r="13"/>
+                <circle cx="670" cy="100" r="13"/>
+                <circle cx="810" cy="100" r="13"/>
+                <circle cx="950" cy="100" r="13"/>
+              </g>
+              <g fill="#cdb98c" font-family="Inter, sans-serif" font-size="10" font-weight="600" text-anchor="middle" opacity=".85">
+                <text x="250" y="104">A</text>
+                <text x="530" y="104">B</text>
+                <text x="670" y="104">C</text>
+                <text x="810" y="104">D</text>
+                <text x="950" y="104">E</text>
+              </g>
+            </g>
+
+            <!-- ============ EARTH ============ -->
+            <g class="layer-earth" data-depth="0.7">
+              <path class="earth-fill" d="M40 660 C140 648, 230 622, 330 598 C430 574, 520 546, 600 512 C690 474, 780 428, 870 386 C950 350, 1030 318, 1160 276 L1160 720 L40 720 Z" fill="url(#earthDepth)" stroke="none"/>
+              <path class="earth-fill" d="M40 660 C140 648, 230 622, 330 598 C430 574, 520 546, 600 512 C690 474, 780 428, 870 386 C950 350, 1030 318, 1160 276 L1160 720 L40 720 Z" fill="url(#earthGrain)" opacity=".6" stroke="none"/>
+              <!-- Excavated volume + interior: keeps the hill out of the house -->
+              <path class="void-fill" d="M250 570 L950 570 L950 240 L250 183 Z" fill="#000" stroke="none"/>
+              <!-- Lamplight in the rooms -->
+              <g class="fade-in" stroke="none">
+                <ellipse cx="400" cy="330" rx="230" ry="180" fill="url(#warmGlow)"/>
+                <ellipse cx="450" cy="512" rx="200" ry="72" fill="url(#warmGlow)"/>
+                <ellipse cx="820" cy="292" rx="150" ry="80" fill="url(#warmGlow)"/>
+                <ellipse cx="860" cy="410" rx="120" ry="60" fill="url(#warmGlow)"/>
+              </g>
+            </g>
+
+            <!-- ============ GROUND LINES ============ -->
+            <g class="layer-ground draw-group" data-depth="0.7" fill="none" stroke-linecap="round">
+              <!-- Finished grade, downhill side -->
+              <path d="M40 660 C140 648, 230 622, 330 598 C390 583, 420 576, 442 572" stroke="#cdb98c" stroke-width="2" opacity=".85"/>
+              <!-- Finished grade, uphill side of the retaining wall -->
+              <path d="M962 350 C1030 320, 1080 302, 1160 276" stroke="#cdb98c" stroke-width="2" opacity=".85"/>
+              <!-- Excavated formation level under the slab -->
+              <path d="M442 572 H930" stroke="#b9a06e" stroke-width="1.1" opacity=".6"/>
+              <!-- Topsoil -->
+              <path d="M40 667 C140 655, 230 629, 330 605 C390 590, 420 583, 444 579" stroke="#cdb98c" stroke-width=".7" opacity=".3"/>
+              <path d="M964 358 C1030 328, 1080 310, 1160 284" stroke="#cdb98c" stroke-width=".7" opacity=".3"/>
+            </g>
+            <!-- Soil hatch along the grade -->
+            <g class="soil fade-in" fill="none" stroke="#cdb98c" stroke-width=".8" opacity=".32" stroke-linecap="round">
+              <path d="M80 662 l9 9 M120 657 l9 9 M160 651 l9 9 M200 643 l9 9 M240 634 l9 9 M280 624 l9 9 M320 612 l9 9 M360 600 l9 9 M400 588 l9 9 M440 578 l9 9"/>
+              <path d="M990 342 l9 9 M1030 324 l9 9 M1070 312 l9 9 M1110 298 l9 9 M1150 284 l9 9"/>
+            </g>
+            <!-- Existing hill profile that was cut away -->
+            <g class="cutline fade-in">
+              <path d="M442 572 C520 546, 600 512, 600 512 C690 474, 780 428, 870 386 C910 370, 940 358, 958 350" fill="none" stroke="#cdb98c" stroke-width="1" opacity=".38" stroke-dasharray="9 7"/>
+            </g>
+
+            <!-- ============ POCHE: everything cut by the section plane ============ -->
+            <g class="poche fade-in" stroke="none">
+              <!-- Floor slabs -->
+              <rect x="250" y="560" width="700" height="10" fill="url(#poche)"/>
+              <rect x="250" y="448" width="700" height="10" fill="url(#poche)"/>
+              <!-- Deep beam spanning the 8 m living volume -->
+              <rect x="250" y="458" width="280" height="12" fill="url(#poche)"/>
+              <rect x="670" y="336" width="280" height="10" fill="url(#poche)"/>
+              <!-- Terrace deck + balcony -->
+              <rect x="165" y="560" width="85" height="8" fill="url(#poche)"/>
+              <rect x="190" y="448" width="60" height="9" fill="url(#poche)"/>
+              <!-- Roof plane, interrupted by the skylight -->
+              <path d="M188 166 L700 208 L700 220 L188 178 Z" fill="url(#poche)"/>
+              <path d="M760 213 L1004 232 L1004 244 L760 225 Z" fill="url(#poche)"/>
+              <!-- Columns: A and B carry the tall volume, C and D the bedroom wing -->
+              <rect x="244" y="183" width="12" height="437" fill="url(#poche)"/>
+              <rect x="526" y="206" width="8" height="392" fill="url(#poche)"/>
+              <rect x="664" y="217" width="12" height="381" fill="url(#poche)"/>
+              <rect x="804" y="229" width="12" height="369" fill="url(#poche)"/>
+              <!-- Uphill wall above the retaining structure -->
+              <rect x="936" y="240" width="14" height="100" fill="url(#poche)"/>
+              <!-- Cantilever retaining wall, tapered, with heel footing -->
+              <path d="M932 334 L954 334 L962 566 L928 566 Z" fill="url(#poche)"/>
+              <path d="M918 566 H1026 V596 H918 Z" fill="url(#poche)"/>
+              <!-- Pad footings, stepping down with the slope -->
+              <path d="M228 616 H272 V644 H228 Z" fill="url(#poche)"/>
+              <path d="M506 570 H554 V598 H506 Z" fill="url(#poche)"/>
+              <path d="M644 570 H696 V598 H644 Z" fill="url(#poche)"/>
+              <path d="M784 570 H836 V598 H784 Z" fill="url(#poche)"/>
+              <path d="M158 644 H196 V666 H158 Z" fill="url(#poche)"/>
+              <!-- Fireplace mass + flue, kept tight against grid B -->
+              <rect x="486" y="396" width="40" height="52" fill="url(#poche)"/>
+              <rect x="496" y="192" width="20" height="204" fill="url(#poche)"/>
+              <rect x="490" y="168" width="30" height="24" fill="url(#poche)"/>
+              <rect x="484" y="160" width="42" height="8" fill="url(#poche)"/>
+              <!-- Entry paving -->
+              <rect x="958" y="342" width="66" height="8" fill="url(#poche)"/>
+              <!-- Granular sub-base + drainage layer behind the wall -->
+              <rect x="250" y="570" width="680" height="9" fill="url(#gravel)"/>
+              <rect x="962" y="352" width="16" height="214" fill="url(#gravel)"/>
+            </g>
+
+            <!-- ============ BUILDING LINEWORK ============ -->
+            <g class="layer-building draw-group" data-depth="0.72" fill="none" stroke="#f3efe6" stroke-width="1.3" stroke-linejoin="miter">
+
+              <!-- Slab edges -->
+              <path d="M250 560 H950 M250 570 H930" stroke-width="1.7"/>
+              <path d="M250 448 H950 M250 458 H950" stroke-width="1.7"/>
+              <path d="M250 470 H530 M530 458 V470" stroke-width="1.7"/>
+              <path d="M670 336 H950 M670 346 H950 M670 336 V346" stroke-width="1.7"/>
+              <!-- Terrace deck + first-floor balcony -->
+              <path d="M165 560 H250 M165 568 H250 M165 560 V568"/>
+              <path d="M190 448 H250 M190 457 H250 M190 448 V457"/>
+
+              <!-- Roof: mono-pitch rising to the view, 1.7 m cantilever -->
+              <path d="M188 166 L1004 232" stroke-width="1.9"/>
+              <path d="M188 178 L700 220 M760 225 L1004 244" stroke-width="1.7"/>
+              <path d="M188 166 V178" stroke-width="1.9"/>
+              <path d="M1004 232 V244" stroke-width="1.7"/>
+              <!-- Upstand gutter at the low edge, parapet at the high edge -->
+              <path d="M188 166 V154 M188 154 H198 M198 154 V167"/>
+              <path d="M1004 232 V218 M1004 218 H1014 M1014 218 V234"/>
+              <!-- Rainwater downpipe into the entry court -->
+              <path d="M1010 236 V344" stroke-width=".9" opacity=".6"/>
+
+              <!-- Skylight over the bedroom wing -->
+              <path d="M700 208 V190 M760 213 V195 M700 190 L760 195"/>
+              <path d="M702 194 L758 199" stroke-width=".8" opacity=".65"/>
+
+              <!-- Columns -->
+              <path d="M244 183 V620 M256 183 V620" stroke-width="1.7"/>
+              <path d="M526 206 V598 M534 206 V598" stroke-width="1.4"/>
+              <path d="M664 217 V598 M676 217 V598" stroke-width="1.7"/>
+              <path d="M804 229 V598 M816 229 V598" stroke-width="1.7"/>
+              <!-- Terrace props -->
+              <path d="M170 568 V648 M182 568 V648"/>
+
+              <!-- Retaining wall, cap and heel -->
+              <path d="M932 334 L928 566 M954 334 L962 566" stroke-width="1.8"/>
+              <path d="M928 334 H958 M928 341 H956"/>
+              <path d="M918 566 H1026 M918 566 V596 M1026 566 V596 M918 596 H1026" stroke-width="1.8"/>
+              <path d="M936 240 V334 M950 240 V334" stroke-width="1.7"/>
+              <!-- Weep drain at the base -->
+              <path d="M962 548 H978" stroke-width=".9" opacity=".7"/>
+              <circle class="draw-line" cx="970" cy="556" r="5" stroke-width=".9" opacity=".7"/>
+
+              <!-- Footings -->
+              <path d="M228 616 H272 M228 616 V644 M272 616 V644 M228 644 H272"/>
+              <path d="M506 570 H554 M506 570 V598 M554 570 V598 M506 598 H554"/>
+              <path d="M644 570 H696 M644 570 V598 M696 570 V598 M644 598 H696"/>
+              <path d="M784 570 H836 M784 570 V598 M836 570 V598 M784 598 H836"/>
+              <path d="M158 644 H196 M158 644 V666 M196 644 V666 M158 666 H196"/>
+              <!-- Stepped foundation wall following the fall -->
+              <path d="M272 630 H506 M272 630 V616 M506 630 V598" stroke-width=".9" opacity=".55"/>
+
+              <!-- Fireplace, flue and stack -->
+              <path d="M486 448 V396 H526 V448"/>
+              <path d="M494 448 V422 H518 V448" stroke-width=".9" opacity=".7"/>
+              <path d="M496 396 V192 M516 396 V192"/>
+              <path d="M490 192 H520 M490 168 H520 M490 168 V192 M520 168 V192"/>
+              <path d="M484 168 H526 M484 160 H526 M484 160 V168 M526 160 V168"/>
+              <path class="smoke" d="M506 152 C518 136, 496 124, 510 108 C524 92, 502 80, 514 64" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+
+              <!-- Stair core: 16 risers per flight, 200 mm rise / 267 mm going -->
+              <g class="stairs">
+                <path d="M670 560 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7 h9.33 v-7"/>
+                <path d="M686 570 L810 462" stroke-width=".9" opacity=".7"/>
+                <path d="M810 448 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7 h-9.33 v-7" opacity=".68"/>
+                <path d="M800 458 L676 350" stroke-width=".9" opacity=".5"/>
+                <!-- Handrails -->
+                <path d="M676 524 L804 422 M676 555 V524 M804 453 V422" stroke-width=".9" opacity=".8"/>
+                <path d="M804 412 L676 310 M804 443 V412 M676 341 V310" stroke-width=".9" opacity=".8"/>
+              </g>
+
+              <!-- Balustrades: terrace, balcony, gallery over the void -->
+              <g class="rails" stroke-width=".9" opacity=".85">
+                <path d="M165 560 V518 M250 560 V518 M162 518 H253"/>
+                <path d="M172 556 V522 M240 556 V522" opacity=".5"/>
+                <path d="M190 448 V410 M190 410 H250"/>
+                <path d="M670 336 V296 M670 296 H700 M676 332 V300" opacity=".9"/>
+              </g>
+
+              <!-- Glazing: double thin lines, mullions at 1.2 m -->
+              <g class="windows" stroke-width=".9">
+                <!-- 6.4 m tall glass wall to the view -->
+                <path d="M262 448 V183 M266 448 V183" opacity=".7"/>
+                <path d="M258 448 H272 M258 340 H272 M258 264 H272" opacity=".55"/>
+                <!-- Lower level sliding doors to the terrace -->
+                <path d="M262 560 V462 M266 560 V462" opacity=".7"/>
+                <path d="M258 560 H272 M258 462 H272" opacity=".55"/>
+                <!-- Bedroom wing: high window to the entry court -->
+                <path d="M936 300 V262 M940 300 V262" opacity=".7"/>
+                <path d="M932 300 H944 M932 262 H944" opacity=".55"/>
+                <!-- Entry door at the arrival level -->
+                <path d="M936 336 V266 M944 336 V266" opacity=".45"/>
+                <!-- Borrowed light between the wing and the tall volume -->
+                <path d="M670 300 H700" opacity=".4" stroke-dasharray="0"/>
+              </g>
+
+              <!-- Fitted furniture, so each level reads as a room -->
+              <g class="furniture" stroke-width=".85" opacity=".7">
+                <!-- L2 living: sofa, table, armchair -->
+                <path d="M276 448 V424 H286 V440 H344 V448 M286 440 H344 V424"/>
+                <path d="M368 448 V434 H404 V448 M368 434 H404"/>
+                <path d="M436 448 V430 H422 V448" opacity=".55"/>
+                <!-- Pendants hung from the roof into the tall volume -->
+                <path d="M318 190 V292 M310 292 H326 L318 302 Z"/>
+                <path d="M352 193 V314 M344 314 H360 L352 324 Z"/>
+                <path d="M386 196 V274 M378 274 H394 L386 284 Z"/>
+                <!-- L2 dining -->
+                <path d="M556 448 V420 M644 448 V420 M548 420 H652"/>
+                <path d="M572 448 V424 M576 424 V434 M624 448 V424 M628 424 V434"/>
+                <!-- L2 kitchen against the uphill wall -->
+                <path d="M828 448 V422 H930 V448 M828 422 H930"/>
+                <path d="M868 360 H930 V392 H868 Z" opacity=".55"/>
+                <!-- L1 guest suite: bed, side table, wardrobe -->
+                <path d="M280 560 V536 H288 V546 H364 V560 M288 546 H364 V536"/>
+                <path d="M374 560 V544 H398 V560 M374 544 H398"/>
+                <path d="M470 560 V486 H510 V560" opacity=".6"/>
+                <!-- L1 plant room: tank -->
+                <path d="M856 560 V498 H916 V560 M856 510 H916" opacity=".6"/>
+                <!-- L3 bedroom: bed, wardrobe, desk to the gallery -->
+                <path d="M700 336 V314 H708 V324 H784 V336 M708 324 H784 V314"/>
+                <path d="M794 336 V322 H816 V336 M794 322 H816"/>
+                <path d="M900 336 V262 H936 V336" opacity=".6"/>
+                <path d="M686 336 V318 H726 V336 M686 318 H726" opacity=".5"/>
+              </g>
+            </g>
+
+            <!-- ============ LIGHT + AIR DIAGRAM ============ -->
+            <g class="rays fade-in">
+              <g stroke="#b9a06e" stroke-width="1" opacity=".5" stroke-dasharray="8 8" fill="none">
+                <path d="M188 178 L656 448"/>
+                <path d="M188 196 L624 448"/>
+                <path d="M188 214 L592 448"/>
+                <path d="M706 200 L716 336"/>
+                <path d="M752 204 L744 336"/>
+              </g>
+              <path d="M228 528 C330 528, 360 470, 430 420 C520 356, 640 300, 700 214" fill="none" stroke="#b9a06e" stroke-width="1.1" opacity=".55" stroke-dasharray="6 7" marker-end="url(#arrowAir)"/>
+            </g>
+
+            <!-- ============ PEOPLE  1.70 m at 1:100 ============ -->
+            <g class="figures" fill="#f3efe6" stroke="#f3efe6" stroke-width="1.1" stroke-linecap="round" data-depth="0.74">
+              <g class="figure" transform="translate(206,560)">
+                <circle cx="0" cy="-54" r="5.4" stroke="none"/>
+                <path d="M0 -48 V-20 M0 -40 L-10 -26 M0 -40 L10 -30 M0 -20 L-7 0 M0 -20 L7 0" fill="none"/>
+              </g>
+              <g class="figure" transform="translate(310,448)">
+                <circle cx="0" cy="-54" r="5.4" stroke="none"/>
+                <path d="M0 -48 V-20 M0 -40 L-9 -28 M0 -40 L11 -34 M0 -20 L-6 0 M0 -20 L8 0" fill="none"/>
+              </g>
+              <g class="figure" transform="translate(598,448)">
+                <circle cx="0" cy="-54" r="5.4" stroke="none"/>
+                <path d="M0 -48 V-20 M0 -38 L-11 -30 M0 -38 L10 -32 M0 -20 L-7 0 M0 -20 L7 0" fill="none"/>
+              </g>
+              <g class="figure" transform="translate(742,504)">
+                <circle cx="0" cy="-54" r="5.4" stroke="none"/>
+                <path d="M0 -48 V-20 M0 -40 L-10 -32 M0 -40 L9 -30 M0 -20 L-9 -2 M0 -20 L6 0" fill="none"/>
+              </g>
+              <g class="figure" transform="translate(860,336)">
+                <circle cx="0" cy="-54" r="5.4" stroke="none"/>
+                <path d="M0 -48 V-20 M0 -40 L-10 -30 M0 -40 L10 -28 M0 -20 L-7 0 M0 -20 L7 0" fill="none"/>
+              </g>
+              <g class="figure" transform="translate(1000,344)">
+                <circle cx="0" cy="-54" r="5.4" stroke="none"/>
+                <path d="M0 -48 V-20 M0 -40 L-11 -34 M0 -40 L9 -26 M0 -20 L-8 0 M0 -20 L6 0" fill="none"/>
+              </g>
+            </g>
+
+            <!-- ============ LANDSCAPE ============ -->
+            <g class="layer-trees-back draw-group" data-depth="0.35" fill="none" stroke="#f3efe6" stroke-width="1.1" stroke-linecap="round" opacity=".55">
+              <g transform="translate(1096,326)">
+                <path d="M0 0 V-104"/>
+                <path d="M0 -46 L-22 -70 M-22 -70 L-32 -84 M-22 -70 L-14 -84"/>
+                <path d="M0 -56 L20 -80 M20 -80 L29 -93 M20 -80 L14 -94"/>
+                <path d="M0 -78 L-16 -98 M0 -86 L15 -104"/>
+              </g>
+              <g transform="translate(1148,318)">
+                <path d="M0 0 V-78"/>
+                <path d="M0 -34 L-16 -54 M0 -44 L15 -62 M0 -60 L-11 -74"/>
+              </g>
+            </g>
+
+            <!-- Garden steps down from the terrace -->
+            <g class="exterior draw-group" data-depth="0.8" fill="none" stroke="#b9a06e" stroke-width="1.1" opacity=".7">
+              <path d="M165 568 h-16 v15 h-16 v15 h-16 v15 h-16 v14 h-16 v14"/>
+              <path d="M958 342 h54 v-12 h28 v-12 h28 v-12 h30"/>
+            </g>
+
+            <g class="layer-trees-front draw-group" data-depth="0.9" fill="none" stroke="#f3efe6" stroke-width="1.2" stroke-linecap="round">
+              <g transform="translate(74,656)">
+                <path d="M0 0 V-150"/>
+                <path d="M0 -66 L-30 -100 M-30 -100 L-44 -120 M-30 -100 L-19 -121"/>
+                <path d="M0 -80 L28 -114 M28 -114 L40 -132 M28 -114 L20 -134"/>
+                <path d="M0 -108 L-22 -136 M-22 -136 L-31 -150 M0 -118 L21 -144"/>
+                <path d="M0 -140 L-11 -158 M0 -140 L12 -160"/>
+              </g>
+            </g>
+
+            <!-- ============ DIMENSIONS ============ -->
+            <g class="dims" fill="none" stroke="#b9a06e" stroke-width=".8">
+              <!-- Structural bays -->
+              <path d="M250 134 H950"/>
+              <path d="M250 128 V140 M530 128 V140 M670 128 V140 M810 128 V140 M950 128 V140"/>
+              <path d="M250 156 H950 M250 150 V162 M950 150 V162"/>
+              <!-- Floor-to-floor chain -->
+              <path d="M124 336 V560"/>
+              <path d="M118 336 H130 M118 448 H130 M118 560 H130"/>
+              <path d="M96 183 V560 M90 183 H102 M90 560 H102"/>
+              <g fill="#cdb98c" font-family="Inter, sans-serif" font-size="9.5" letter-spacing="1.2" stroke="none">
+                <text x="390" y="128" text-anchor="middle">8.00</text>
+                <text x="600" y="128" text-anchor="middle">4.00</text>
+                <text x="740" y="128" text-anchor="middle">4.00</text>
+                <text x="880" y="128" text-anchor="middle">4.00</text>
+                <text x="600" y="150" text-anchor="middle">20.00 OVERALL</text>
+                <text x="118" y="396" text-anchor="middle" transform="rotate(-90 118 396)">3.20</text>
+                <text x="118" y="508" text-anchor="middle" transform="rotate(-90 118 508)">3.20</text>
+                <text x="90" y="372" text-anchor="middle" transform="rotate(-90 90 372)">10.80</text>
+              </g>
+            </g>
+
+            <!-- ============ ANNOTATION ============ -->
+            <g class="notes" fill="#cdb98c" font-family="Inter, sans-serif" font-size="9.5" letter-spacing="1.6">
+              <!-- Level datums -->
+              <g stroke="#f3efe6" stroke-width=".8" opacity=".8">
+                <path d="M288 560 H322 M300 560 l6 -9 h-12 z" fill="#f3efe6"/>
+                <path d="M288 448 H322 M300 448 l6 -9 h-12 z" fill="#f3efe6"/>
+                <path d="M700 336 H734 M712 336 l6 -9 h-12 z" fill="#f3efe6"/>
+              </g>
+              <text x="326" y="556">&#177;0.000</text>
+              <text x="326" y="444">+3.200</text>
+              <text x="738" y="332">+6.400</text>
+              <!-- Room names -->
+              <g opacity=".85">
+                <text x="278" y="524">GUEST SUITE</text>
+                <text x="700" y="524">PLANT &#183; STORE</text>
+                <text x="278" y="412">LIVING &#183; DOUBLE HEIGHT</text>
+                <text x="556" y="412">DINING</text>
+                <text x="828" y="412">KITCHEN</text>
+                <text x="742" y="300">BEDROOM</text>
+                <text x="168" y="512">TERRACE</text>
+                <text x="1034" y="330">ENTRY</text>
+                <text x="60" y="620">GARDEN</text>
+              </g>
+              <!-- Leaders -->
+              <g stroke="#b9a06e" stroke-width=".8" fill="none" opacity=".6">
+                <path d="M1000 470 H962"/>
+                <path d="M338 664 L392 604"/>
+                <path d="M296 230 L206 184"/>
+                <path d="M660 254 L706 216"/>
+              </g>
+              <g opacity=".8">
+                <text x="1006" y="466">RCC CANTILEVER RETAINING WALL</text>
+                <text x="1006" y="480" font-size="8.5" opacity=".7">GRAVEL DRAIN + WEEP TO LAND DRAIN</text>
+                <text x="332" y="676" text-anchor="end">STEPPED PAD FOOTINGS ON UNDISTURBED SOIL</text>
+                <text x="302" y="234">1.70 M CANTILEVER CUTS THE HIGH SUMMER SUN</text>
+                <text x="302" y="249" font-size="8.5" opacity=".72">WINTER SUN STILL REACHES 6 M INTO THE PLAN</text>
+                <text x="656" y="250" text-anchor="end">SKYLIGHT</text>
+              </g>
+              <!-- Title block -->
+              <path d="M250 676 H700" stroke="#b9a06e" stroke-width=".8" opacity=".45" fill="none"/>
+              <text x="250" y="694" font-size="11" letter-spacing="3" fill="#f3efe6" opacity=".9">SECTION A&#8211;A &#183; HILLSIDE RESIDENCE</text>
+              <!-- Scale bar -->
+              <g transform="translate(960,684)">
+                <rect x="0" y="0" width="35" height="7" fill="#cdb98c" opacity=".75"/>
+                <rect x="35" y="0" width="35" height="7" fill="none" stroke="#cdb98c" stroke-width=".8" opacity=".75"/>
+                <rect x="70" y="0" width="35" height="7" fill="#cdb98c" opacity=".75"/>
+                <rect x="105" y="0" width="35" height="7" fill="none" stroke="#cdb98c" stroke-width=".8" opacity=".75"/>
+                <text x="0" y="22" font-size="8.5">0</text>
+                <text x="66" y="22" font-size="8.5">2</text>
+                <text x="136" y="22" font-size="8.5">4 M</text>
+                <text x="140" y="-6" font-size="8.5" text-anchor="end" opacity=".8">SCALE 1:100</text>
+              </g>
+            </g>
+          </svg>
+
+          <!-- Interactive hotspots -->
+          <button class="hotspot" style="--hx:23%; --hy:44%" data-tip="8 m column-free glass wall — the living volume opens 6.4 m high to the view, mullions every 1.2 m" aria-label="Glazing detail">
+            <span></span>
+          </button>
+          <button class="hotspot" style="--hx:58%; --hy:29%" data-tip="Mono-pitch roof — the 1.7 m cantilever cuts the high summer sun, and the skylight drops daylight into the bedroom wing" aria-label="Roof detail">
+            <span></span>
+          </button>
+          <button class="hotspot" style="--hx:62%; --hy:65%" data-tip="One straight flight per level — 200 mm risers on 267 mm goings, so the stair is comfortable, not steep" aria-label="Staircase detail">
+            <span></span>
+          </button>
+          <button class="hotspot" style="--hx:79%; --hy:65%" data-tip="RCC cantilever retaining wall — 6.4 m of hillside held back, with a gravel drain and heel footing so the lower level stays dry" aria-label="Retaining wall detail">
+            <span></span>
+          </button>
+          <button class="hotspot" style="--hx:42%; --hy:81%" data-tip="Stepped pad footings — each one bears on undisturbed soil as the slope falls away" aria-label="Foundation detail">
+            <span></span>
+          </button>
+        </div>
+
+        <div class="atelier-brand">
+          <div class="atelier-mark" aria-hidden="true">
+            <span>MB</span>
+          </div>
+          <p>MALWA BUILDERS</p>
+        </div>
+
+        <div class="atelier-legend">
+          <div class="legend-item active" data-focus="structure"><em>01</em><span>Structure</span></div>
+          <div class="legend-item" data-focus="light"><em>02</em><span>Light &amp; Air</span></div>
+          <div class="legend-item" data-focus="scale"><em>03</em><span>Human Scale</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Services ===== -->
   <section class="services section" id="services">
     <div class="container">
@@ -169,10 +654,19 @@
     <div class="container">
       <div class="section-head">
         <p class="eyebrow reveal">Our Portfolio</p>
-        <h2 class="reveal">Completed <span class="gold">Projects</span> &amp; Reels</h2>
-        <p class="section-lead reveal">Real walkthroughs of homes we've built. Click any reel to watch it on our Facebook page.</p>
+        <h2 class="reveal">Projects We Have <span class="gold">Created</span></h2>
+        <p class="section-lead reveal">Villas, bungalows, farmhouses and interiors from our own drawing boards and sites. Tap any image to open it full screen.</p>
+      </div>
+
+      <div class="pfilters" id="projectFilters" aria-label="Filter projects"><!-- populated by js/main.js --></div>
+      <div class="pgrid" id="projectGrid"><!-- populated by js/main.js --></div>
+
+      <div class="section-head sub-head">
+        <h3 class="reveal">On-Site <span class="gold">Walkthroughs</span></h3>
+        <p class="section-lead reveal">Real reels from our Facebook page &mdash; tap any one to watch.</p>
       </div>
       <div class="reels" id="reels"><!-- populated by js/main.js --></div>
+
       <div class="projects-cta reveal">
         <a id="instaBtn" class="btn btn-ghost" href="#" target="_blank" rel="noopener">
           See more on Instagram
@@ -276,6 +770,7 @@
       <div>
         <h4>Explore</h4>
         <a href="#about">About</a>
+        <a href="#studio">Studio</a>
         <a href="#services">Services</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
@@ -306,9 +801,21 @@
   </a>
 
   <!-- ===== Lightbox ===== -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Project photo">
     <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
-    <img id="lbImg" src="" alt="" />
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <figure class="lb-figure">
+      <img id="lbImg" src="" alt="" />
+      <figcaption class="lb-cap">
+        <strong id="lbTitle"></strong>
+        <span id="lbMeta"></span>
+      </figcaption>
+    </figure>
   </div>
 
   <!-- Scripts -->
