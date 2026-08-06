@@ -1209,16 +1209,34 @@
       return "light";
     }
 
+    function previewHole() {
+      const preview = document.querySelector("#portfolio .portfolio-frame");
+      if (!preview) return null;
+      return preview.getBoundingClientRect();
+    }
+
+    function insidePreview(x, y) {
+      const r = previewHole();
+      if (!r) return false;
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    }
+
     function spawn() {
       if (stars.length >= MAX_ACTIVE) return;
       const angle = 0.32 + Math.random() * 0.34;
       const speed = 7 + Math.random() * 11;
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
-      const y = Math.random() * h * 0.82 + 2;
+      let x = Math.random() * w * 0.98 + w * 0.01;
+      let y = Math.random() * h * 0.82 + 2;
+      /* Don't start stars on top of the VisionForge preview */
+      if (insidePreview(x, y)) {
+        const r = previewHole();
+        y = Math.random() < 0.5 ? Math.max(2, r.top - 24) : Math.min(h - 2, r.bottom + 24);
+      }
       const big = Math.random() < 0.18;
       stars.push({
-        x: Math.random() * w * 0.98 + w * 0.01,
+        x,
         y,
         vx,
         vy,
@@ -1311,8 +1329,16 @@
         s.life -= s.fade;
         s.shimmer += 0.08;
         s.tone = toneAt(s.y);
-        drawStar(s);
+        /* Skip drawing while a star is over the VisionForge preview */
+        if (!insidePreview(s.x, s.y)) drawStar(s);
         if (s.life <= 0 || s.x > w + 200 || s.y > h + 200) stars.splice(i, 1);
+      }
+
+      /* Punch a clean hole so trails never sit on the preview */
+      const hole = previewHole();
+      if (hole) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(hole.left, hole.top, hole.width, hole.height);
       }
       requestAnimationFrame(tick);
     }
