@@ -1224,7 +1224,7 @@
     function spawn() {
       if (stars.length >= MAX_ACTIVE) return;
       const angle = 0.32 + Math.random() * 0.34;
-      const speed = 7 + Math.random() * 11;
+      const speed = 9 + Math.random() * 13;
       const vx = Math.cos(angle) * speed;
       const vy = Math.sin(angle) * speed;
       let x = Math.random() * w * 0.98 + w * 0.01;
@@ -1243,7 +1243,7 @@
         len: (big ? 140 : 90) + Math.random() * (big ? 200 : 150),
         w: big ? 1.8 + Math.random() * 1.2 : 0.9 + Math.random() * 1.5,
         life: 1,
-        fade: reduced ? 0.0055 : 0.006 + Math.random() * 0.005,
+        fade: reduced ? 0.0065 : 0.0075 + Math.random() * 0.0055,
         palette: pickPalette(),
         tone: toneAt(y),
         shimmer: Math.random() * Math.PI * 2,
@@ -1252,7 +1252,7 @@
 
     function spawnBurst(count) {
       for (let i = 0; i < count; i++) {
-        setTimeout(spawn, i * (120 + Math.random() * 200));
+        setTimeout(spawn, i * (90 + Math.random() * 150));
       }
     }
 
@@ -1319,7 +1319,7 @@
         spawn();
         if (!reduced && Math.random() < 0.42) spawn();
         if (!reduced && Math.random() < 0.12) spawnBurst(2 + Math.floor(Math.random() * 2));
-        nextAt = now + (reduced ? 4000 : 700) + Math.random() * 1800;
+        nextAt = now + (reduced ? 3200 : 520) + Math.random() * 1300;
       }
 
       for (let i = stars.length - 1; i >= 0; i--) {

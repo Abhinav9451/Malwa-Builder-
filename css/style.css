@@ -208,8 +208,8 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(8px, 3vw, 40px);
   text-align: center;
-  margin-bottom: clamp(40px, 6vw, 64px);
-  padding-bottom: clamp(28px, 4vw, 40px);
+  margin-bottom: clamp(18px, 3vw, 28px);
+  padding-bottom: clamp(14px, 2.2vw, 22px);
   border-bottom: 1px solid rgba(26, 24, 20, 0.08);
 }
 .about-stats strong {
@@ -257,6 +257,13 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
     radial-gradient(700px 360px at 90% 100%, rgba(109, 86, 48, 0.08), transparent 50%),
     var(--bg-2);
   border-bottom: 1px solid var(--line);
+  padding-bottom: clamp(28px, 4vw, 48px);
+}
+.portfolio .section-head {
+  margin-bottom: clamp(24px, 3.5vw, 40px);
+}
+.about.section {
+  padding-top: clamp(36px, 5vw, 64px);
 }
 .portfolio-frame {
   position: relative;
@@ -285,6 +292,11 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
   display: block;
   z-index: 1;
   background: transparent;
+}
+.portfolio-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
 }
 /* ===== Full-screen Portfolio page (portfolio.html) ===== */
 .portfolio-page {
@@ -344,26 +356,10 @@ h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.12; font-weight: 700;
   display: block;
   background: #0a0a0a;
 }
-.portfolio-credit {
-  position: fixed;
-  top: 78px;
-  right: 16px;
-  z-index: 21;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: #f3efe6;
-  background: rgba(18, 21, 27, 0.78);
-  border: 1px solid rgba(185, 160, 110, 0.28);
-}
 @media (max-width: 720px) {
   .portfolio-bar-title { display: none; }
   .portfolio-brand img { height: 40px; }
   .portfolio-stage { padding-top: 60px; }
-  .portfolio-credit { top: 70px; right: 10px; font-size: 0.62rem; }
 }
 
 /* ===== Section colour grading (light page rhythm) ===== */
